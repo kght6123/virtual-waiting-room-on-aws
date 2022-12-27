@@ -71,8 +71,12 @@ export default {
           return response.json();
         }).then(function (json) {
           // update the expired token count in the data model
-          local_this.expiredTokens = json.length;
-          local_this.$store.commit("setExpiredTokens", json.length);
+          const expiredTokens = json.reduce(
+            (accumulator, currentValue) => Array.isArray(currentValue) ? accumulator  + currentValue.length : accumulator + 1,
+            0
+          );
+          local_this.expiredTokens = expiredTokens;
+          local_this.$store.commit("setExpiredTokens", expiredTokens);
           local_this.updateSuccess = true;
           local_this.updateError = false;
         }).catch((error) => {
